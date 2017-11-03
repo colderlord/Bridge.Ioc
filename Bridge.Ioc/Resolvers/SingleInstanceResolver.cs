@@ -4,9 +4,9 @@ namespace Bridge.Ioc
 {
     public class SingleInstanceResolver : IResolver
     {
-        private static object _singleInstance;
+        private object _singleInstance;
 
-        public Func<object> Resolve { get; set; }
+        public Func<object> Resolve { get; private set; }
 
         public SingleInstanceResolver(IIoc ioc, Type type)
         {
