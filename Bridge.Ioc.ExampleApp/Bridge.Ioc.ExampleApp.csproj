@@ -46,12 +46,16 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Abstract\ICalc.cs" />
+    <Compile Include="Abstract\IService.cs" />
+    <Compile Include="Abstract\ISubService.cs" />
     <Compile Include="Abstract\ISubtract.cs" />
     <Compile Include="Abstract\ISum.cs" />
     <Compile Include="App.cs" />
     <Compile Include="Calculators\Adder.cs" />
     <Compile Include="Calculators\Calculator.cs" />
     <Compile Include="Calculators\Subtractor.cs" />
+    <Compile Include="Impl\ServiceImpl.cs" />
+    <Compile Include="Impl\SubServiceImpl.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

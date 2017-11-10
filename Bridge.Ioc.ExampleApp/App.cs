@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Bridge.Ioc.ExampleApp.Abstract;
 using Bridge.Ioc.ExampleApp.Calculators;
+using Bridge.Ioc.ExampleApp.Impl;
 
 namespace Bridge.Ioc.ExampleApp
 {
@@ -43,6 +44,12 @@ namespace Bridge.Ioc.ExampleApp
             Console.WriteLine($"3+4={calc1.Add(3,4)}");
             Console.WriteLine($"7-2={calc1.Subtract(7,2)}");
 
+            firstContainer.RegisterSingleInstance<ServiceImpl>();
+            firstContainer.Register<IService, ServiceImpl>();
+            firstContainer.RegisterSingleInstance<SubServiceImpl>();
+            firstContainer.Register<ISubService, SubServiceImpl>();
+            var service = firstContainer.Resolve<IService>();
+            service.RunService();
         }
     }
 }
