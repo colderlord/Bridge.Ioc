@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Bridge.Ioc
 {
@@ -94,25 +93,29 @@ namespace Bridge.Ioc
 
 
         #region RESOLVE
-        public TType Resolve<TType>() where TType : class
+        public virtual TType Resolve<TType>() where TType : class
         {
-            return (TType)Resolve(typeof(TType));
+            CheckNotRegistered<TType>();
+
+            var resolver = _resolvers[typeof(TType)];
+            return (TType)resolver.Resolve();
         }
 
-        public object Resolve(Type type)
+        public virtual object Resolve(Type type)
         {
-            var isLazyType = type.IsGenericType && type.GetGenericTypeDefinition() == typeof(ILazy<>);
-            CheckNotRegistered(!isLazyType ? type : type.GetGenericArguments()[0]);
-            if (isLazyType)
+            CheckNotRegistered(type);
+
+            var resolver = _resolvers[type];
+            return resolver.Resolve();
+        }
+
+        public IResolver GetResolver(Type type)
+        {
+            if (_resolvers.ContainsKey(type))
             {
-                var lazyType = typeof(Lazy<>).MakeGenericType(new[] { type.GetGenericArguments()[0] });
-                return Activator.CreateInstance(lazyType, new[] { this });
+                return _resolvers[type];
             }
-            else
-            {
-                var resolver = _resolvers[type];
-                return resolver.Resolve();
-            }
+            return null;
         }
         #endregion
 
@@ -141,27 +144,6 @@ namespace Bridge.Ioc
             CheckNotRegistered(typeof(TType));
         }
 
-        private class Lazy<T> : ILazy<T> where T : class
-        {
-            private IIoc _ioc;
-            private T _resolved;
-
-            public Lazy(IIoc ioc)
-            {
-                _ioc = ioc;
-            }
-
-            public T Value()
-            {
-                if (_resolved == null)
-                {
-                    _resolved = _ioc.Resolve<T>();
-                }
-                return _resolved;
-            }
-        }
-
         #endregion
     }
-
 }

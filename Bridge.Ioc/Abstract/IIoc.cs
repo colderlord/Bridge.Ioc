@@ -19,5 +19,6 @@ namespace Bridge.Ioc
         void RegisterInstance(object instance);
         TType Resolve<TType>() where TType : class;
         object Resolve(Type type);
+        IResolver GetResolver(Type type);
     }
 }
